@@ -1,0 +1,108 @@
+#!bin/bash
+sudo su -
+sudo apt update
+sudo apt-get -y install unzip
+sudo apt install -y jq
+sudo apt install -y json
+
+#AWS CLI installion
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install -y
+
+apt install awscli -y
+
+
+#Kops Installion V1.21.1
+wget https://github.com/kubernetes/kops/releases/download/v1.21.1/kops-linux-amd64
+mv kops-linux-amd64 kops
+chmod 777 kops
+mv kops /usr/local/bin/
+
+#Kubctl installion V1.22.0
+apt-get install update
+apt-get install curl
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod 777 kubectl
+mv kubectl /usr/local/bin/
+
+#User Access..
+# configure the aws client to use your new IAM user
+aws configure           # Use your new access and secret key here
+aws iam list-users      # you should see a list of all your IAM users here
+
+# Because "aws configure" doesn't export these vars for kops to use, we export them now
+export AWS_ACCESS_KEY_ID=$(AKIATF3V2G6GZPDPLJ6F)
+export AWS_SECRET_ACCESS_KEY=$(bBrY9NlGWWWcR059/9NVemajbN0/JbzbBrV575o1)
+
+
+#Export 
+echo 'export NAME=rbpatnam.live' >> ~/.bashrc
+echo 'export KOPS_STATE_STORE=s3://rbpatnam.live' >> ~/.bashrc
+echo 'export AWS_REGION=us-east-1' >> ~/.bashrc
+echo 'export CLUSTER_NAME=rbpatnam.live' >> ~/.bashrc
+echo 'export EDITOR='/usr/bin/nano''>> ~/.bashrc
+echo 'export K8S_VERSION=1.21.1' >>~/.bashrc
+
+
+#Alias create
+echo 'source <(kubectl completion bash)' >>~/.bashrc
+echo 'alias ku=kubectl' >>~/.bashrc
+echo 'complete -o default -F __start_kubectl ku' >>~/.bashrc
+source ~/.bashrc
+
+#SSH keys Generate
+ssh-keygen -t rsa -f /root/.ssh/id_rsa -q -P ""
+echo '-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA7rCyd4qpBqMNtIYRmYpQfczt6ky3QFfqggFMlu4syK0ROVn/
+v8UiWHU7ip4MF3/LYbQyzZxHVgLPSIdXRC+0YyLr5+pdZtoNpVxJBbj8wZS0m6X4
+EHinFky+OxHSP2HvPQAA8HztLEodx5IQ0kyD5ilUDYIozzzVlfjDy7aRZu4g70pm
+W9yk5Lncfj2UtL+Y1jMZHepZQqOgFlYfGUnTSnH1blbThrcszXkoVQFEUoHMh/Iv
+oxzvfXMDt6jajrlNabfCoIyzoJC/QidTTtustfYhW2DJUR9C2KzipUZBgsSUXIIp
+TXKp/VLHnpeyKHsDebaipv3fqY5OssuzX12AmQIDAQABAoIBAE1SNB4BbwvVWiU2
+oRDp+3UlI5UY0OwpDrCalyL1eNBxL/kyLGUFCUE6iNU4qZYbMdkutJ5il8FHG7rV
+DPHrujW7JEx2YVdmH7GHmage6tISyAb71sYPL6FLrvwXo9IgeY17KNK+xV3pjIgP
+yx805i1zCeVuWqX3gQEaGuMs+yEqNp2jZ/Yf+J5V7etOFU6IjLe4n2st1STZrzzB
+C5E3E31gS1HdJ/9HqdzHFMSPzXB+L6ZogTjPMk2KK/xuMBYNHCGwpMGa/HHjR3hY
+RyE4xs+0gJZhSA+iPiXon1RG2ivRtCjtxaxScBqwGigC99ZG7b9IXRKitu4Hlun8
+uU0WTgECgYEA94CxOrJHHdfoMhcmG9RT69Pd14fWgBU8Bg5vqF+owfCV0HkoBVMP
+t3BEfi+7k2SIysvJAcSPyqHMlAq+qz/7gTtGFZmeATDdQ0H1vehaoA3TaIxRNK4h
+b1g0yM2E6yBoiBe+NQT9mf6Hg9piBlcLxoK2teSoXW8Q6ESHXXXhpLkCgYEA9uKN
+PNCtoqj+LqT5tGO222HqejDYG2sDXwMASfw7aCqFb58aq2uJcYAE3t6H3h71XQi6
+2WV62ZrLVza3Vx8e0Tx+q2JWl3aT5iriLFqE6GEYhFgYHNZhesAIIsFTC7wNL6oa
+6Yaa31y5/KUDV1iTb+vO5Bz935mNVHgDtgtAiuECgYEAp+iR091Qq+lm6FyWCPlC
+OdJRRUAtgFVnlEBE9fh3t6LtMDKRuRMBrZQnk2f0nGju+I3J/z4HwxODg8fKVMmi
+aaj5wfummu44ncFo4v54RO88Rkgza0ba/fvcS4JKM22YHQPmkXeiSM/JxeTo7Z4u
+Ke1R4RKQOlr4IGslXn1zqFkCgYBGW7gujbX+NjUCLAfxrb0t9lCxc/wSjEPQrvVF
+IHn5rKyMbAZYtfPcgcRhk3+bAK2iTtuZGv+QxjmO6EwFqxvIO3pJ82OEFMn/fVcp
+lr5rz0gCZ2yvwzTSm6l15ix5mqUTYWH8DV1TrIRgiNJT8S1LZyN2BQEg2Qza9rzw
+A3LoYQKBgGrlUmtnMKhMy/2Fq34QsmO1NEbGtVN75ebUKL+HBWbAd3kFqgrKlHYs
+3XU1Oh5as0Fne5APrynYWrcldUXnjNBqASK1yYP6Oy23a0VEtbKEhJpJ1QpYTyRW
+n/oHGTKDQNUsbMTz0xme0GeFEWDJO4lhatXryoE3fYDqk7Ug5Z1J
+-----END RSA PRIVATE KEY-----' > /root/.ssh/id_rsa
+
+echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDusLJ3iqkGow20hhGZilB9zO3qTLdAV+qCAUyW7izIrRE5Wf+/xSJYdTuKngwXf8thtDLNnEdWAs9Ih1dEL7RjIuvn6l1m2g2lXEkFuPzBlLSbpfgQeKcWTL47EdI/Ye89AADwfO0sSh3HkhDSTIPmKVQNgijPPNWV+MPLtpFm7iDvSmZb3KTkudx+PZS0v5jWMxkd6llCo6AWVh8ZSdNKcfVuVtOGtyzNeShVAURSgcyH8i+jHO99cwO3qNqOuU1pt8KgjLOgkL9CJ1NO26y19iFbYMlRH0LYrOKlRkGCxJRcgilNcqn9Useel7IoewN5tqKm/d+pjk6yy7NfXYCZ imported-openssh-key' > /root/.ssh/id_rsa.pub
+
+#kops 3nods-cluster
+touch /root/kubernets.sh
+chmod 777 /root/kubernets.sh
+echo 'mkdir /root/cluster/
+touch /root/cluster/3node-3cluster.sh
+chmod 777 /root/cluster/3node-3cluster.sh
+echo 'kops create cluster --name=rbpatnam.live \
+--state=s3://rbpatnam.live --zones=us-east-1a,us-east-1b,us-east-1c \
+--node-count=3 --master-count=1 --node-size=t2.medium --master-size=t2.medium \
+--master-zones=us-east-1a --master-volume-size 10 --node-volume-size 10 \
+--dns-zone=rbpatnam.live --yes' >> /root/cluster/3node-3cluster.sh' >> /root/kubernets.sh
+
+#Running script
+bash /root/kubernets.sh
+
+#Removing Floder
+rm -rf /root/kubernets.sh
+
+#Delete Kops cluster
+touch /root/cluster/delete-cluster.sh
+chmod 777 /root/cluster/delete-cluster.sh
+echo 'kops delete cluster --name=rbpatnam.live --yes' >> /root/cluster/delete-cluster.sh
